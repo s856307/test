@@ -115,6 +115,7 @@ async function initRedGreen() {
     });
 }
 
+/*
 // ===== 總結頁 =====
 async function initSummary() {
     const res = await fetch("data/latest.json");
@@ -171,5 +172,101 @@ function createPieCard(container, title, data) {
                 legend: { display: false } // 可以自己選擇要不要顯示圖例
             }
         }
+    });
+}
+*/
+// ===================== 股票清單 / 紅綠篩選功能保持不變 =====================
+
+// 你的原本 init(), bindFilters(), initRedGreen() 之類的功能保持
+// 這裡只示範 summary 新增部分
+
+// ===================== summary 功能 =====================
+async function initSummary() {
+    const summaryGrid = document.getElementById('summaryGrid');
+    if (!summaryGrid) return;
+
+    // 1. 讀取 latest.json
+    const resData = await fetch('data/latest.json');
+    const stockData = await resData.json();
+
+    // 計算每個產業的漲跌股數和交易金額
+    const industryMap = {}; // {industry: {up:0, down:0, tradeAmt:0}}
+    let totalTradeAmt = 0;
+
+    stockData.forEach(s => {
+        const industry = s.type || '其他';
+        const close = parseFloat(s.close_price) || 0;
+        const tradeAmt = close * (parseFloat(s.trade_shares)||0);
+
+        // 漲跌判斷
+        const spread = parseFloat(s.spread) || 0;
+        const up = spread>0 ? 1 : 0;
+        const down = spread<0 ? 1 : 0;
+
+        if(!industryMap[industry]) industryMap[industry]={up:0, down:0, tradeAmt:0};
+        industryMap[industry].up += up;
+        industryMap[industry].down += down;
+        industryMap[industry].tradeAmt += tradeAmt;
+
+        totalTradeAmt += tradeAmt;
+    });
+
+    // 2. 讀取 TWSE BFIAMU JSON
+    const resTWSE = await fetch('https://www.twse.com.tw/rwd/zh/afterTrading/BFIAMU?response=json');
+    const twseJson = await resTWSE.json();
+    const twseData = twseJson.data; // 每個 row: [產業, buy, sell, ???, 漲跌百分比]
+    
+    const twseMap = {};
+    twseData.forEach(row=>{
+        const name = row[0].trim().replace(/類指數$/,''); 
+        const pct = parseFloat(row[4])||0; // 漲跌百分比
+        twseMap[name] = pct;
+    });
+	console.log(twseMap)
+	
+    // 3. 生成總覽卡片
+    const totalUp = Object.values(industryMap).reduce((a,b)=>a+b.up,0);
+    const totalDown = Object.values(industryMap).reduce((a,b)=>a+b.down,0);
+    createSummaryCard(summaryGrid, '總覽', totalUp, totalDown, 100, twseMap['全部']||0);
+
+    // 4. 各產業卡片
+    Object.entries(industryMap).forEach(([industry, info])=>{
+		console.log(industry)
+        const tradePct = ((info.tradeAmt/totalTradeAmt)*100).toFixed(1);
+        const twsePct = twseMap[industry] || 0;
+        createSummaryCard(summaryGrid, industry, info.up, info.down, tradePct, twsePct);
+    });
+}
+
+// 建立單個 summary 卡片
+function createSummaryCard(container, title, upCount, downCount, tradePct, twsePct) {
+    const card = document.createElement('div');
+    card.className = 'summary-card';
+
+    // 左上角產業名
+    const h3 = document.createElement('h3');
+    h3.textContent = title;
+    card.appendChild(h3);
+
+    // 右上角交易金額百分比 + TWSE漲跌百分比
+    const small = document.createElement('small');
+    small.textContent = `成交:${tradePct}% / 漲跌:${twsePct}%`;
+    card.appendChild(small);
+
+    // 中間圓餅圖
+    const canvas = document.createElement('canvas');
+    card.appendChild(canvas);
+    container.appendChild(card);
+
+    new Chart(canvas.getContext('2d'), {
+        type:'pie',
+        data:{
+            labels:['上漲','下跌'],
+            datasets:[{
+                data:[upCount, downCount],
+                backgroundColor:['#2ECC40','#FF4136']
+            }]
+        },
+        options:{ plugins:{ legend:{ display:false } } }
     });
 }
