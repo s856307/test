@@ -1,28 +1,64 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <title>總結</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body style="background:#111;color:#eee;padding:20px;" data-page="summary">
+<meta charset="UTF-8">
+<title>總結</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+    background: #111;
+    color: #eee;
+    font-family: sans-serif;
+    padding: 20px;
+}
 
-<h1>📈 市場總結</h1>
+h1 { margin-bottom: 20px; }
+
+.summary-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* 置中排列 */
+}
+
+.summary-card {
+    background: #222;
+    border-radius: 10px;
+    padding: 10px;
+    width: calc(16.66% - 16px); /* 一 row 6 個方框 (100/6 ≈16.66%) */
+    box-sizing: border-box;
+    position: relative;
+    text-align: center;
+}
+
+.summary-card h3 {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 0.8rem; /* 字體稍微縮小 */
+    margin: 0;
+}
+
+canvas {
+    margin-top: 25px; /* 保留標題空間 */
+    width: 80px !important; /* 圓餅圖縮小 */
+    height: 80px !important;
+}
+</style>
+</head>
+<body data-page="summary">
+
+<h1>📊 總結</h1>
 <div class="tabs">
   <a href="index.html" class="tab-link">首頁</a>
   <a href="stocks.html" class="tab-link">個股清單</a>
   <a href="redgreen.html" class="tab-link">紅綠清單</a>
   <a href="summary.html" class="tab-link">總結</a>
 </div>
-
-<div id="summary"></div>
-
-<hr>
-
-<div id="types"></div>
-<h2>市場結構</h2>
-<canvas id="summaryChart" width="200" height="200"></canvas>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="summary-grid" id="summaryGrid">
+    <!-- JS 會自動生成卡片和圓餅圖 -->
+</div>
 
 <script src="app.js"></script>
 <script>

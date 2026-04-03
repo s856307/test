@@ -120,21 +120,56 @@ async function initSummary() {
     const res = await fetch("data/latest.json");
     const data = await res.json();
 
-    const totalUp = data.filter(d => parseFloat(d.spread_per) > 0).length;
-    const totalDown = data.filter(d => parseFloat(d.spread_per) < 0).length;
+    const summaryGrid = document.getElementById('summaryGrid');
+    if (!summaryGrid) return;
 
-    const canvas = document.getElementById('summaryChart');
-    if (!canvas) return; // 如果頁面沒有 canvas，就直接跳過
+    // 1️⃣ 全部台股總覽
+    createPieCard(summaryGrid, '總覽', data);
 
-    const ctx = canvas.getContext('2d');
-    new Chart(ctx, {
+    // 2️⃣ 按產業分類
+    const types = [...new Set(data.map(d => d.type).filter(Boolean))].sort();
+
+    types.forEach(type => {
+        const typeData = data.filter(d => d.type === type);
+        createPieCard(summaryGrid, type, typeData);
+    });
+}
+
+// 建立單個卡片 + 圓餅圖
+function createPieCard(container, title, data) {
+    const card = document.createElement('div');
+    card.className = 'summary-card';
+
+    const h3 = document.createElement('h3');
+    h3.textContent = title;
+    card.appendChild(h3);
+
+    const canvas = document.createElement('canvas');
+    card.appendChild(canvas);
+
+    container.appendChild(card);
+
+    // 計算漲跌數量
+    let up = 0, down = 0;
+    data.forEach(d => {
+        const spread = parseFloat(d.spread_per) || 0;
+        if (spread > 0) up++;
+        else if (spread < 0) down++;
+    });
+
+    new Chart(canvas.getContext('2d'), {
         type: 'pie',
         data: {
             labels: ['上漲', '下跌'],
             datasets: [{
-                data: [totalUp, totalDown],
-                backgroundColor: ['#FF4136', '#2ECC40']
+                data: [up, down],
+                backgroundColor: ['#2ECC40', '#FF4136']
             }]
+        },
+        options: {
+            plugins: {
+                legend: { display: false } // 可以自己選擇要不要顯示圖例
+            }
         }
     });
 }
