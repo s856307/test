@@ -3,11 +3,15 @@ let table;
 async function init() {
   const res = await fetch("data/latest.json");
   const data = await res.json();
+<<<<<<< HEAD
   
   if (window.PAGE_TYPE === "redgreen") {
     data = filterRedGreen(data);
   }
   
+=======
+
+>>>>>>> 7d4ad820e473c2835e64411a3cee808b4ce51e7c
   initTypeFilter(data);
 
   table = $('#stockTable').DataTable({
@@ -41,6 +45,7 @@ async function init() {
   bindFilters();
 }
 
+<<<<<<< HEAD
 function filterRedGreen(data) {
 
   // ===== 方法1：條件 =====
@@ -56,6 +61,8 @@ function filterRedGreen(data) {
   */
 }
 
+=======
+>>>>>>> 7d4ad820e473c2835e64411a3cee808b4ce51e7c
 function initTypeFilter(data) {
   const types = [...new Set(data.map(d => d.type).filter(Boolean))];
   const select = document.getElementById("typeFilter");
