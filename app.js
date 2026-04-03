@@ -185,25 +185,32 @@ async function initSummary() {
     const summaryGrid = document.getElementById('summaryGrid');
     if (!summaryGrid) return;
 
-    // 1. 讀取 latest.json
-    const resData = await fetch('data/latest.json');
-    const stockData = await resData.json();
+    // ===== 1️⃣ 讀 latest.json =====
+    const res = await fetch('data/latest.json');
+    const data = await res.json();
 
-    // 計算每個產業的漲跌股數和交易金額
-    const industryMap = {}; // {industry: {up:0, down:0, tradeAmt:0}}
+    const industryMap = {};
     let totalTradeAmt = 0;
 
-    stockData.forEach(s => {
+    data.forEach(s => {
         const industry = s.type || '其他';
+
         const close = parseFloat(s.close_price) || 0;
-        const tradeAmt = close * (parseFloat(s.trade_shares)||0);
+        const volume = parseFloat(s.trade_shares) || 0;
+        const tradeAmt = close * volume;
 
-        // 漲跌判斷
         const spread = parseFloat(s.spread) || 0;
-        const up = spread>0 ? 1 : 0;
-        const down = spread<0 ? 1 : 0;
+        const up = spread > 0 ? 1 : 0;
+        const down = spread < 0 ? 1 : 0;
 
-        if(!industryMap[industry]) industryMap[industry]={up:0, down:0, tradeAmt:0};
+        if (!industryMap[industry]) {
+            industryMap[industry] = {
+                up: 0,
+                down: 0,
+                tradeAmt: 0
+            };
+        }
+
         industryMap[industry].up += up;
         industryMap[industry].down += down;
         industryMap[industry].tradeAmt += tradeAmt;
@@ -211,62 +218,73 @@ async function initSummary() {
         totalTradeAmt += tradeAmt;
     });
 
-    // 2. 讀取 TWSE BFIAMU JSON
-    const resTWSE = await fetch('https://www.twse.com.tw/rwd/zh/afterTrading/BFIAMU?response=json');
-    const twseJson = await resTWSE.json();
-    const twseData = twseJson.data; // 每個 row: [產業, buy, sell, ???, 漲跌百分比]
-    
-    const twseMap = {};
-    twseData.forEach(row=>{
-        const name = row[0].trim().replace(/類指數$/,''); 
-        const pct = parseFloat(row[4])||0; // 漲跌百分比
-        twseMap[name] = pct;
-    });
-	console.log(twseMap)
-	
-    // 3. 生成總覽卡片
+    // ===== 2️⃣ 總覽 =====
     const totalUp = Object.values(industryMap).reduce((a,b)=>a+b.up,0);
     const totalDown = Object.values(industryMap).reduce((a,b)=>a+b.down,0);
-    createSummaryCard(summaryGrid, '總覽', totalUp, totalDown, 100, twseMap['全部']||0);
 
-    // 4. 各產業卡片
-    Object.entries(industryMap).forEach(([industry, info])=>{
-		console.log(industry)
-        const tradePct = ((info.tradeAmt/totalTradeAmt)*100).toFixed(1);
-        const twsePct = twseMap[industry] || 0;
-        createSummaryCard(summaryGrid, industry, info.up, info.down, tradePct, twsePct);
+    createSummaryCard(summaryGrid, '總覽', totalUp, totalDown, 100);
+
+    // ===== 3️⃣ 整理 + 排序 =====
+    const industryList = Object.entries(industryMap).map(([industry, info]) => {
+
+        const tradePct = (info.tradeAmt / totalTradeAmt) * 100;
+
+        return {
+            industry,
+            up: info.up,
+            down: info.down,
+            tradePct
+        };
+    });
+
+    // 👉 依成交占比排序（大 → 小）
+    industryList.sort((a, b) => b.tradePct - a.tradePct);
+
+    // ===== 4️⃣ render =====
+    industryList.forEach(d => {
+        createSummaryCard(
+            summaryGrid,
+            d.industry,
+            d.up,
+            d.down,
+            d.tradePct.toFixed(1)
+        );
     });
 }
 
 // 建立單個 summary 卡片
-function createSummaryCard(container, title, upCount, downCount, tradePct, twsePct) {
+function createSummaryCard(container, title, upCount, downCount, tradePct) {
+
     const card = document.createElement('div');
     card.className = 'summary-card';
 
-    // 左上角產業名
+    // 左上
     const h3 = document.createElement('h3');
     h3.textContent = title;
     card.appendChild(h3);
 
-    // 右上角交易金額百分比 + TWSE漲跌百分比
+    // 右上（只留成交占比）
     const small = document.createElement('small');
-    small.textContent = `成交:${tradePct}% / 漲跌:${twsePct}%`;
+    small.textContent = `成交金額占比:${tradePct}%`;
     card.appendChild(small);
 
-    // 中間圓餅圖
+    // 圓餅圖
     const canvas = document.createElement('canvas');
     card.appendChild(canvas);
     container.appendChild(card);
 
     new Chart(canvas.getContext('2d'), {
-        type:'pie',
-        data:{
-            labels:['上漲','下跌'],
-            datasets:[{
-                data:[upCount, downCount],
-                backgroundColor:['#2ECC40','#FF4136']
+        type: 'pie',
+        data: {
+            labels: ['上漲家數', '下跌家數'],
+            datasets: [{
+                data: [upCount, downCount],
+                backgroundColor: ['#FF4136', '#2ECC40']
             }]
         },
-        options:{ plugins:{ legend:{ display:false } } }
+        options: {
+            plugins: { legend: { display: false } }
+        }
     });
+	
 }

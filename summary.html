@@ -18,32 +18,57 @@ h1 { margin-bottom: 20px; }
 .summary-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center; /* 置中排列 */
+    gap: 18px;
+    justify-content: center;
+    padding: 10px;
 }
 
+/* 卡片 */
 .summary-card {
-    background: #222;
-    border-radius: 10px;
-    padding: 10px;
-    width: calc(16.66% - 16px); /* 一 row 6 個方框 (100/6 ≈16.66%) */
+    background: linear-gradient(145deg, #1a1a1a, #222);
+    border-radius: 12px;
+    padding: 12px;
+    width: calc(16.66% - 16px);
     box-sizing: border-box;
     position: relative;
     text-align: center;
+
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.2s ease;
 }
 
+/* hover 效果 */
+.summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    border-color: rgba(255,255,255,0.15);
+}
+
+/* 左上標題 */
 .summary-card h3 {
     position: absolute;
-    top: 5px;
-    left: 5px;
-    font-size: 0.8rem; /* 字體稍微縮小 */
+    top: 8px;
+    left: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
     margin: 0;
+    color: #ddd;
 }
 
-canvas {
-    margin-top: 25px; /* 保留標題空間 */
-    width: 80px !important; /* 圓餅圖縮小 */
-    height: 80px !important;
+/* 右上資訊 */
+.summary-card small {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 0.75rem;
+    color: #aaa;
+}
+
+/* 圓餅圖 */
+.summary-card canvas {
+    margin-top: 28px;
+    width: 90px !important;
+    height: 90px !important;
 }
 </style>
 </head>
