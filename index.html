@@ -2,93 +2,70 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-<<<<<<< HEAD
   <title>股票分析入口</title>
   <style>
-    body { background:#111; color:#eee; padding:20px; }
-    a {
-      display:block;
-      margin:10px 0;
-      color:#4fc3f7;
-      font-size:18px;
+    body {
+      background: #111;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      padding: 20px;
     }
-=======
-  <title>股票分析</title>
-
-  <!-- DataTables -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
-  <style>
-    body { background:#111; color:#eee; padding:20px; }
-    input { margin:5px; padding:5px; }
->>>>>>> 7d4ad820e473c2835e64411a3cee808b4ce51e7c
+    h1 {
+      text-align: center;
+    }
+    .tabs {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
+      justify-content: center;
+    }
+    .tabs a {
+      padding: 10px 20px;
+      background: #222;
+      color: #eee;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: 0.2s;
+    }
+    .tabs a:hover {
+      background: #444;
+    }
+    .note {
+      background: #222;
+      padding: 15px;
+      border-radius: 8px;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
 
-<<<<<<< HEAD
-<h1>📊 股票分析平台</h1>
+<h1>📊 股票分析入口網站</h1>
 
-<h2>功能入口</h2>
-
-<a href="stocks.html">📄 個股清單</a>
-<a href="redgreen.html">🟢🔴 紅綠清單</a>
-<a href="summary.html">📈 總結（開發中）</a>
-
-<hr>
-
-<h2>使用說明</h2>
-<p>此工具用於篩選股票與觀察市場趨勢。</p>
-
-=======
-<h1>📊 股票分析</h1>
-
-<!-- 篩選區 -->
-<div>
-  <select id="typeFilter">
-    <option value="">全部類別</option>
-  </select>
-  價格: <input id="minPrice" placeholder="最低">
-  ~ <input id="maxPrice" placeholder="最高">
-
-  漲跌%: <input id="minSpread" placeholder="最低">
-
-  成交量: <input id="minVolume" placeholder="最低">
-
-  周轉率%: <input id="minTurnover" placeholder="最低">
+<!-- Tab 連結 -->
+<div class="tabs">
+  <a href="stocks.html">個股清單</a>
+  <a href="redgreen.html">紅綠清單</a>
+  <a href="summary.html">總結</a>
+  <!-- 未來可添加其他 Tab -->
+  <a href="#">更多功能</a>
 </div>
 
-<table id="stockTable" class="display">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>名稱</th>
-      <th>類別</th>
-      <th>收盤價</th>
-      <th>價差</th>
-      <th>漲幅%</th>
-      <th>五日漲跌</th>
-      <th>五日漲幅%</th>
-      <th>漲停歷史</th>
-      <th>交易量</th>
-      <th>周轉率%</th>
-      <th>MA5</th>
-      <th>MA10</th>
-      <th>MA20</th>
-      <th>外資</th>
-      <th>外資5日</th>
-      <th>投信</th>
-      <th>自營</th>
-      <th>當沖</th>
-      <th>當沖%</th>
-    </tr>
-  </thead>
-</table>
+<!-- 注意事項 / 使用說明 -->
+<div class="note">
+  <h2>使用與注意事項</h2>
+  <ul>
+    <li>每日資料更新後，請刷新各子頁面以查看最新資訊。</li>
+    <li>個股清單頁面可查詢並篩選所有股票資訊。</li>
+    <li>紅綠清單僅顯示符合特定條件的股票。</li>
+    <li>總結頁面提供當日台股概況與統計圖表。</li>
+    <li>目前網站為靜態頁面，所有資料更新需依賴後續 JSON 生成。</li>
+    <li>未來可添加更多功能 Tab，如自動提醒或歷史統計分析。</li>
+  </ul>
+  <p>此區域可自由編輯，補充每日或特殊公告。</p>
+</div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-<script src="app.js"></script>
->>>>>>> 7d4ad820e473c2835e64411a3cee808b4ce51e7c
 </body>
 </html>
