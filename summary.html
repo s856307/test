@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>總結</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body style="background:#111;color:#eee;padding:20px;" data-page="summary">
 
@@ -13,16 +14,24 @@
   <a href="redgreen.html" class="tab-link">紅綠清單</a>
   <a href="summary.html" class="tab-link">總結</a>
 </div>
+
 <div id="summary"></div>
 
 <hr>
 
 <div id="types"></div>
 <h2>市場結構</h2>
-<canvas id="pieChart" width="300" height="300"></canvas>
-
+<canvas id="summaryChart" width="200" height="200"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script src="summary.js"></script>
+<script src="app.js"></script>
+<script>
+// Tab 高亮
+document.querySelectorAll(".tabs a").forEach(a => {
+  if(a.getAttribute("href") === document.body.getAttribute("data-page") + ".html") {
+    a.classList.add("active");
+  }
+});
+</script>
 </body>
 </html>

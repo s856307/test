@@ -1,73 +1,55 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <title>股票分析</title>
-
-  <!-- DataTables -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
-  <style>
-    body { background:#111; color:#eee; padding:20px; }
-    input { margin:5px; padding:5px; }
-  </style>
+<meta charset="UTF-8">
+<title>個股清單</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 </head>
 <body data-page="redgreen">
 
-<h1>🟢🔴 紅綠清單</h1>
+<h1>📊 個股清單</h1>
+
 <div class="tabs">
   <a href="index.html" class="tab-link">首頁</a>
   <a href="stocks.html" class="tab-link">個股清單</a>
   <a href="redgreen.html" class="tab-link">紅綠清單</a>
   <a href="summary.html" class="tab-link">總結</a>
 </div>
-<!-- 篩選區 -->
-<div>
-  <select id="typeFilter">
-    <option value="">全部類別</option>
-  </select>
-  價格: <input id="minPrice" placeholder="最低">
-  ~ <input id="maxPrice" placeholder="最高">
 
+<div class="filters">
+  <select id="typeFilter"><option value="">全部類別</option></select>
+  價格: <input id="minPrice" placeholder="最低"> ~ <input id="maxPrice" placeholder="最高">
   漲跌%: <input id="minSpread" placeholder="最低">
-
   成交量: <input id="minVolume" placeholder="最低">
-
   周轉率%: <input id="minTurnover" placeholder="最低">
 </div>
 
 <table id="stockTable" class="display">
   <thead>
     <tr>
-      <th>ID</th>
-      <th>名稱</th>
-      <th>類別</th>
-      <th>收盤價</th>
-      <th>價差</th>
-      <th>漲幅%</th>
-      <th>五日漲跌</th>
-      <th>五日漲幅%</th>
-      <th>漲停歷史</th>
-      <th>交易量</th>
-      <th>周轉率%</th>
-      <th>MA5</th>
-      <th>MA10</th>
-      <th>MA20</th>
-      <th>外資</th>
-      <th>外資5日</th>
-      <th>投信</th>
-      <th>自營</th>
-      <th>當沖</th>
-      <th>當沖%</th>
+      <th>ID</th><th>名稱</th><th>類別</th><th>收盤價</th>
+      <th>價差</th><th>漲幅%</th><th>五日漲跌</th><th>五日漲幅%</th>
+      <th>漲停歷史</th><th>交易量</th><th>周轉率%</th>
+      <th>MA5</th><th>MA10</th><th>MA20</th>
+      <th>外資</th><th>外資5日</th><th>投信</th><th>自營</th><th>當沖</th><th>當沖%</th>
     </tr>
   </thead>
 </table>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script>
-  window.PAGE_TYPE = "redgreen";
-</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="app.js"></script>
+
+<script>
+// Tab 高亮
+document.querySelectorAll(".tabs a").forEach(a => {
+  if(a.getAttribute("href") === document.body.getAttribute("data-page") + ".html") {
+    a.classList.add("active");
+  }
+});
+</script>
+
 </body>
 </html>
