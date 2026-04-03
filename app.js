@@ -163,7 +163,7 @@ function createPieCard(container, title, data) {
             labels: ['上漲', '下跌'],
             datasets: [{
                 data: [up, down],
-                backgroundColor: ['#2ECC40', '#FF4136']
+                backgroundColor: ['#FF4136','#2ECC40']
             }]
         },
         options: {
