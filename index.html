@@ -30,6 +30,11 @@
     .tabs a:hover {
       background: #444;
     }
+    .tabs a.active {
+      background: #007bff;
+      color: #fff;
+      font-weight: bold;
+    }
     .note {
       background: #222;
       padding: 15px;
@@ -40,17 +45,16 @@
     }
   </style>
 </head>
-<body>
+<body data-page="index">
 
 <h1>📊 股票分析入口網站</h1>
 
 <!-- Tab 連結 -->
 <div class="tabs">
-  <a href="stocks.html">個股清單</a>
-  <a href="redgreen.html">紅綠清單</a>
-  <a href="summary.html">總結</a>
-  <!-- 未來可添加其他 Tab -->
-  <a href="#">更多功能</a>
+  <a href="index.html" class="tab-link">首頁</a>
+  <a href="stocks.html" class="tab-link">個股清單</a>
+  <a href="redgreen.html" class="tab-link">紅綠清單</a>
+  <a href="summary.html" class="tab-link">總結</a>
 </div>
 
 <!-- 注意事項 / 使用說明 -->
@@ -61,11 +65,21 @@
     <li>個股清單頁面可查詢並篩選所有股票資訊。</li>
     <li>紅綠清單僅顯示符合特定條件的股票。</li>
     <li>總結頁面提供當日台股概況與統計圖表。</li>
-    <li>目前網站為靜態頁面，所有資料更新需依賴後續 JSON 生成。</li>
+    <li>目前網站為靜態頁面，所有資料更新需依賴 JSON。</li>
     <li>未來可添加更多功能 Tab，如自動提醒或歷史統計分析。</li>
   </ul>
   <p>此區域可自由編輯，補充每日或特殊公告。</p>
 </div>
+
+<script>
+  // 標記當前頁面的 Tab
+  const page = document.body.getAttribute("data-page");
+  document.querySelectorAll(".tabs a").forEach(a => {
+    if(a.getAttribute("href") === page + ".html") {
+      a.classList.add("active");
+    }
+  });
+</script>
 
 </body>
 </html>
