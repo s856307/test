@@ -7,8 +7,6 @@ async function init() {
   if (window.PAGE_TYPE === "redgreen") {
     data = filterRedGreen(data);
   }
-  
-=======
 
   initTypeFilter(data);
 
