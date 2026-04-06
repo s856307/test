@@ -99,7 +99,7 @@ async function initRedGreen() {
     const tableElem = document.getElementById('stockTable');
     if (!tableElem) return;
 
-    $('#stockTable').DataTable({
+    window.table = $('#stockTable').DataTable({
         data: redgreenData,
         columns: [
             { data: 'id' }, { data: 'name' }, { data: 'type' },
@@ -113,6 +113,7 @@ async function initRedGreen() {
         ],
         pageLength: 50
     });
+	initTypeFilter(redgreenData);
 	bindFilters();
 }
 
