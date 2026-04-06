@@ -23,7 +23,17 @@ async function initStocks() {
     window.table = $('#stockTable').DataTable({
         data: data,
         columns: [
-            { data: 'id' }, { data: 'name' }, { data: 'type' },
+            { data: 'id' }, 
+			{
+				data: 'name',
+				render: function (data, type, row) {
+					const stockId = row.id;
+					const url = `https://tw.stock.yahoo.com/quote/${stockId}.TW`;
+
+					return `<a href="${url}" target="_blank">${data}</a>`;
+				}
+			}, 
+			{ data: 'type' },
             { data: 'close_price' }, { data: 'spread' }, { data: 'spread_per' },
             { data: 'spread_summary' }, { data: 'spread_summary_5days' },
             { data: 'limit_up_20days' }, { data: 'trade_shares' }, { data: 'turnover_rate' },
@@ -102,7 +112,17 @@ async function initRedGreen() {
     window.table = $('#stockTable').DataTable({
         data: redgreenData,
         columns: [
-            { data: 'id' }, { data: 'name' }, { data: 'type' },
+            { data: 'id' },
+			{
+				data: 'name',
+				render: function (data, type, row) {
+					const stockId = row.id;
+					const url = `https://tw.stock.yahoo.com/quote/${stockId}.TW`;
+
+					return `<a href="${url}" target="_blank">${data}</a>`;
+				}
+			}, 
+			{ data: 'type' },
             { data: 'close_price' }, { data: 'spread' }, { data: 'spread_per' },
             { data: 'spread_summary' }, { data: 'spread_summary_5days' },
             { data: 'limit_up_20days' }, { data: 'trade_shares' }, { data: 'turnover_rate' },
