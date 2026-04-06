@@ -113,72 +113,8 @@ async function initRedGreen() {
         ],
         pageLength: 50
     });
+	bindFilters();
 }
-
-/*
-// ===== 總結頁 =====
-async function initSummary() {
-    const res = await fetch("data/latest.json");
-    const data = await res.json();
-
-    const summaryGrid = document.getElementById('summaryGrid');
-    if (!summaryGrid) return;
-
-    // 1️⃣ 全部台股總覽
-    createPieCard(summaryGrid, '總覽', data);
-
-    // 2️⃣ 按產業分類
-    const types = [...new Set(data.map(d => d.type).filter(Boolean))].sort();
-
-    types.forEach(type => {
-        const typeData = data.filter(d => d.type === type);
-        createPieCard(summaryGrid, type, typeData);
-    });
-}
-
-// 建立單個卡片 + 圓餅圖
-function createPieCard(container, title, data) {
-    const card = document.createElement('div');
-    card.className = 'summary-card';
-
-    const h3 = document.createElement('h3');
-    h3.textContent = title;
-    card.appendChild(h3);
-
-    const canvas = document.createElement('canvas');
-    card.appendChild(canvas);
-
-    container.appendChild(card);
-
-    // 計算漲跌數量
-    let up = 0, down = 0;
-    data.forEach(d => {
-        const spread = parseFloat(d.spread_per) || 0;
-        if (spread > 0) up++;
-        else if (spread < 0) down++;
-    });
-
-    new Chart(canvas.getContext('2d'), {
-        type: 'pie',
-        data: {
-            labels: ['上漲', '下跌'],
-            datasets: [{
-                data: [up, down],
-                backgroundColor: ['#FF4136','#2ECC40']
-            }]
-        },
-        options: {
-            plugins: {
-                legend: { display: false } // 可以自己選擇要不要顯示圖例
-            }
-        }
-    });
-}
-*/
-// ===================== 股票清單 / 紅綠篩選功能保持不變 =====================
-
-// 你的原本 init(), bindFilters(), initRedGreen() 之類的功能保持
-// 這裡只示範 summary 新增部分
 
 // ===================== summary 功能 =====================
 async function initSummary() {
