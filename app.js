@@ -431,4 +431,5 @@ function highlightActiveTab() {
 // ✅ 這段一定要有
 document.addEventListener("DOMContentLoaded", () => {
   loadNavbar();
+  loadLatestDate();
 });
