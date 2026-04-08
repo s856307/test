@@ -75,24 +75,13 @@ h1 { margin-bottom: 20px; }
 <body data-page="summary">
 
 <h1>📊 總結</h1>
-<div class="tabs">
-  <a href="index.html" class="tab-link">首頁</a>
-  <a href="stocks.html" class="tab-link">個股清單</a>
-  <a href="redgreen.html" class="tab-link">紅綠清單</a>
-  <a href="summary.html" class="tab-link">總結</a>
-</div>
+<div id="navbar"></div>
 <div class="summary-grid" id="summaryGrid">
     <!-- JS 會自動生成卡片和圓餅圖 -->
 </div>
 
 <script src="app.js"></script>
 <script>
-// Tab 高亮
-document.querySelectorAll(".tabs a").forEach(a => {
-  if(a.getAttribute("href") === document.body.getAttribute("data-page") + ".html") {
-    a.classList.add("active");
-  }
-});
 </script>
 </body>
 </html>

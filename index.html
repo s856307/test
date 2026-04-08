@@ -50,12 +50,7 @@
 <h1>📊 股票分析入口網站</h1>
 
 <!-- Tab 連結 -->
-<div class="tabs">
-  <a href="index.html" class="tab-link">首頁</a>
-  <a href="stocks.html" class="tab-link">個股清單</a>
-  <a href="redgreen.html" class="tab-link">紅綠清單</a>
-  <a href="summary.html" class="tab-link">總結</a>
-</div>
+<div id="navbar"></div>
 
 <!-- 注意事項 / 使用說明 -->
 <div class="note">
@@ -74,13 +69,6 @@
 
 <script src="app.js"></script>
 <script>
-  // 標記當前頁面的 Tab
-  const page = document.body.getAttribute("data-page");
-  document.querySelectorAll(".tabs a").forEach(a => {
-    if(a.getAttribute("href") === page + ".html") {
-      a.classList.add("active");
-    }
-  });
 </script>
 
 </body>

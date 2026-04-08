@@ -10,12 +10,9 @@
 
 <h1>📊 個股清單</h1>
 
-<div class="tabs">
-  <a href="index.html" class="tab-link">首頁</a>
-  <a href="stocks.html" class="tab-link">個股清單</a>
-  <a href="redgreen.html" class="tab-link">紅綠清單</a>
-  <a href="summary.html" class="tab-link">總結</a>
-</div>
+<div id="navbar"></div>
+
+<div id="latest-date"></div>
 
 <div class="filters">
   <select id="typeFilter"><option value="">全部類別</option></select>
@@ -43,12 +40,6 @@
 <script src="app.js"></script>
 
 <script>
-// Tab 高亮
-document.querySelectorAll(".tabs a").forEach(a => {
-  if(a.getAttribute("href") === document.body.getAttribute("data-page") + ".html") {
-    a.classList.add("active");
-  }
-});
 </script>
 
 </body>

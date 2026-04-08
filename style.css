@@ -66,3 +66,34 @@ h1 {
   margin:5px; 
   padding:5px;
 }
+
+body {
+  font-family: Arial;
+  padding: 20px;
+}
+
+.red {
+  color: #d60000;
+  font-weight: bold;
+}
+
+.green {
+  color: #008f3a;
+  font-weight: bold;
+}
+
+.detail-row td {
+  background: #fafafa;
+}
+
+.detail-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.detail-item {
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #eee;
+}

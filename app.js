@@ -8,6 +8,8 @@ if (page === "stocks") {
     initRedGreen();
 } else if (page === "summary") {
     initSummary();
+} else if (page === "weekly") {
+    initWeeklyPage();
 }
 
 // ===== 個股清單 =====
@@ -266,4 +268,167 @@ async function loadLatestDate() {
   }
 }
 
-loadLatestDate();
+// ===== 載入 weekly =====
+async function initWeeklyPage() {
+  try {
+    const res = await fetch('data/weekly/latest.json');
+    const data = await res.json();
+
+    const tableData = data.map(stock => {
+      const latest = stock.latest || {};
+
+      return [
+        `<a href="https://tw.stock.yahoo.com/quote/${stock._id}.TW" target="_blank">
+          ${stock._id} ${stock.name}
+        </a>`,
+        stock.type || "",
+        (latest.big_ratio || 0).toFixed(2),
+        `<span class="${color(stock.delta_big_ratio)}">${(stock.delta_big_ratio || 0).toFixed(2)}</span>`,
+        `<span class="${color(stock.delta_mid_ratio, true)}">${(stock.delta_mid_ratio || 0).toFixed(2)}</span>`,
+        `<span class="${color(stock.delta_ultra_total)}">${formatNumber(stock.delta_ultra_total || 0)}</span>`,
+        `<span class="${color(stock.shift)}">${(stock.shift || 0).toFixed(2)}</span>`,
+        (stock.score || 0).toFixed(2),
+        stock // 👉 保留原始資料（給展開用）
+      ];
+    });
+
+    const table = $('#weekly-table').DataTable({
+      data: tableData,
+
+      columns: [
+        { title: "股票" },
+        { title: "產業" },
+        { title: "大戶持股比" },
+        { title: "Δ大戶" },
+        { title: "Δ中戶" },
+        { title: "超大戶" },
+        { title: "籌碼上移" },
+        { title: "分數" },
+        { title: "data", visible: false } // 隱藏原始資料
+      ],
+
+      order: [[7, "desc"]], // 預設用 score 排序
+
+      pageLength: 50
+    });
+
+    // 👉 點擊展開
+    $('#weekly-table tbody').on('click', 'tr', function () {
+
+      const row = table.row(this);
+      const rowData = row.data();
+
+      const stock = rowData[8]; // 最後一欄
+
+      if (row.child.isShown()) {
+        row.child.hide();
+        $(this).removeClass('shown');
+      } else {
+
+        const detailHtml = `
+          <div class="detail-box">
+            ${stock.data.map(w => `
+              <div class="detail-item">
+                ${formatDate(w.date)} :
+                <span class="${color(w.delta_big)}">
+                  ${w.delta_big.toFixed(2)}
+                </span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+
+        row.child(detailHtml).show();
+        $(this).addClass('shown');
+      }
+
+    });
+
+  } catch (e) {
+    console.error("weekly load error", e);
+  }
+}
+
+// ===== 展開 10週資料 =====
+function toggleDetail(tr, stock) {
+
+  // 如果已經展開 → 收起
+  if (tr.nextSibling && tr.nextSibling.classList.contains("detail-row")) {
+    tr.nextSibling.remove();
+    return;
+  }
+
+  const detail = document.createElement("tr");
+  detail.className = "detail-row";
+
+  detail.innerHTML = `
+    <td colspan="8">
+      <div class="detail-box">
+        ${stock.data.map(w => `
+          <div class="detail-item">
+            <span>${formatDate(w.date)}</span>
+            <span class="${color(w.delta_big)}">
+              ${w.delta_big.toFixed(2)}
+            </span>
+          </div>
+        `).join("")}
+      </div>
+    </td>
+  `;
+
+  tr.after(detail);
+}
+
+// ===== 顏色（台股：紅漲綠跌）=====
+function color(val, reverse=false) {
+  if (reverse) val = -val;
+
+  if (val > 0) return "red";
+  if (val < 0) return "green";
+  return "";
+}
+
+// ===== 日期格式 =====
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return `${d.getMonth()+1}/${d.getDate()}`;
+}
+
+// ===== 數字格式 =====
+function formatNumber(num) {
+  return num.toLocaleString();
+}
+
+async function loadNavbar() {
+  try {
+    const el = document.getElementById("navbar");
+    if (!el) return;
+
+    const res = await fetch("navbar.html");
+    const html = await res.text();
+
+    el.innerHTML = html;
+
+    highlightActiveTab(); // ✅ 載入後才執行
+
+  } catch (e) {
+    console.error("navbar load error", e);
+  }
+}
+
+function highlightActiveTab() {
+  const links = document.querySelectorAll(".tab-link");
+
+  const currentPage = document.body.getAttribute("data-page") + ".html";
+
+  links.forEach(link => {
+    if (link.getAttribute("href") === currentPage) {
+      link.classList.add("active");
+    }
+  });
+}
+
+// ✅ 這段一定要有
+document.addEventListener("DOMContentLoaded", () => {
+  loadNavbar();
+});
