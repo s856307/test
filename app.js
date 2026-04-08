@@ -249,7 +249,7 @@ function createSummaryCard(container, title, upCount, downCount, tradePct) {
 }
 async function loadLatestDate() {
   try {
-    const res = await fetch('/data/daily/latest.json');
+    const res = await fetch('data/daily/latest.json');
     const data = await res.json();
 
     if (!data || data.length === 0) return;
