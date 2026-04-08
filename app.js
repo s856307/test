@@ -12,7 +12,7 @@ if (page === "stocks") {
 
 // ===== 個股清單 =====
 async function initStocks() {
-    const res = await fetch("data/latest.json");
+    const res = await fetch("data/daily/latest.json");
     const data = await res.json();
 
     initTypeFilter(data);
@@ -98,7 +98,7 @@ function bindFilters() {
 
 // ===== 紅綠清單 =====
 async function initRedGreen() {
-    const res = await fetch("data/latest.json");
+    const res = await fetch("data/daily/latest.json");
     const data = await res.json();
 
     const redgreenData = data.filter(d => {
@@ -143,7 +143,7 @@ async function initSummary() {
     if (!summaryGrid) return;
 
     // ===== 1️⃣ 讀 latest.json =====
-    const res = await fetch('data/latest.json');
+    const res = await fetch('data/daily/latest.json');
     const data = await res.json();
 
     const industryMap = {};
@@ -245,3 +245,25 @@ function createSummaryCard(container, title, upCount, downCount, tradePct) {
     });
 	
 }
+async function loadLatestDate() {
+  try {
+    const res = await fetch('/data/daily/latest.json');
+    const data = await res.json();
+
+    if (!data || data.length === 0) return;
+
+    const dateStr = data[0].date;
+    const date = new Date(dateStr);
+
+    const formatted =
+      String(date.getMonth() + 1).padStart(2, '0') + "/" +
+      String(date.getDate()).padStart(2, '0');
+
+    document.getElementById("latest-date").innerText =
+      `資料更新至：${formatted}`;
+  } catch (err) {
+    console.error("讀取最新日期失敗", err);
+  }
+}
+
+loadLatestDate();
