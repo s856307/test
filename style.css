@@ -94,6 +94,9 @@ body {
 
 .detail-item {
   padding: 4px 8px;
-  border-radius: 4px;
-  background: #eee;
+  border-radius: 6px;
+  background: #f0f0f0;
+  color: #333;
+  font-size: 12px;
+  border: 1px solid #e0e0e0;
 }
